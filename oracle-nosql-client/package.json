@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "oracle-nosqldb": "5.5.3"
+  }
+}
