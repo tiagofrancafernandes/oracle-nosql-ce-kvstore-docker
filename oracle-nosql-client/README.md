@@ -1,45 +1,54 @@
-# Oracle NoSQL Manager (Node.js CLI Demo)
+# Oracle NoSQL Client Demo
 
-Este projeto é um utilitário de interface de linha de comando (CLI) projetado para gerenciar e interagir com o **Oracle NoSQL Database Cloud Service**, rodando localmente através do Docker.
+Este é um projeto de demonstração em **Node.js v22** que implementa uma interface de linha de comando (CLI) para interagir com o Oracle NoSQL local.
 
-## 🚀 Por que esta aplicação?
+## 📖 Funcionalidades
 
-A aplicação foi desenvolvida para agilizar o ciclo de desenvolvimento de software em ambientes que utilizam tecnologias Oracle:
-1.  **Workflow Sem Fricção**: Conecta-se diretamente ao Proxy local (Porta 8080) sem a necessidade de chaves de segurança complexas, utilizando o driver nativo `ServiceType.KVSTORE`.
-2.  **Poder do SQL sobre JSON**: Demonstra como executar consultas SQL tradicionais em documentos JSON semiestruturados, permitindo filtrar dados internos com facilidade.
-3.  **Prototipagem Rápida**: Fornece comandos de bootstrap (setup) e manipulação de dados instantâneos para desenvolvedores que utilizam ferramentas de IA como **Claude Code** ou **Ollama**.
+- **Setup Automatizado**: Criação de tabelas com suporte a campos JSON.
+- **CLI Dinâmica**: Suporte a argumentos posicionais simples ou comandos formatados em JSON.
+- **HTAP**: Execução de consultas SQL diretamente sobre documentos JSON.
+- **Auto-documentação**: Sistema de ajuda integrado com o comando `help`.
 
-## 🛠 Especificações do Ambiente de Teste
+## ⚙️ Instalação
 
-O desenvolvimento foi validado em um sistema de alta performance:
-*   **Sistema Operacional**: Ubuntu 24.04.3 LTS.
-*   **Processador**: 12th Gen Intel i7-12650H (10 núcleos/16 threads).
-*   **Memória**: ~32GB RAM.
-*   **Gráficos**: NVIDIA GeForce RTX 3050 (Arquitetura Ampere com 6GB VRAM).
+Entre na pasta do projeto e instale as dependências:
 
-## 📖 Como Usar
-
-### Pré-requisitos
-Certifique-se de que o Oracle NoSQL está rodando via Docker:
 ```bash
-docker compose up -d
+cd oracle-nosql-client
+npm install
 ```
 
-### Comandos CLI
-A ferramenta aceita argumentos posicionais simples ou strings JSON para automação.
+## 🚀 Como Usar
+
+O script `index.js` gerencia as operações. Você pode executá-lo passando o nome da função e os argumentos.
+
+### Ajuda e Documentação
+```bash
+node index.js --help
+```
+
+### Comandos Disponíveis
 
 | Comando | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `setup` | Cria a tabela `users` com suporte a JSON. | `node index.js setup` |
-| `insert`| Insere um documento em uma tabela. | `node index.js insert users '{"id": 1, "info": {"name": "Tiago"}}'` |
-| `query` | Executa consultas SQL-like. | `node index.js query "SELECT * FROM users"` |
-| `help`  | Mostra a ajuda completa. | `node index.js --help` |
+| `check` | Verifica se o proxy está respondendo. | `node index.js check` |
+| `setup` | Cria a tabela `users` (id, info). | `node index.js setup` |
+| `listTables` | Lista as tabelas do banco. | `node index.js listTables` |
+| `insert` | Insere um JSON em uma tabela. | `node index.js insert users '{"id": 1, "info": {"name": "Tiago"}}'` |
+| `query` | Executa uma consulta SQL. | `node index.js query "SELECT * FROM users"` |
 
-## 📂 Estrutura Técnica
-*   **`init()`**: Gerencia o ciclo de vida da conexão com o driver `oracle-nosqldb`.
-*   **`insert()`**: Utiliza a `Put API` para persistir dados transformando strings em objetos JS suportados.
-*   **`statement()`**: Interface para a `Query API` que permite execução de comandos DML e DDL.
-*   **`execute()`**: Despachante que interpreta o `process.argv` do Node.js v22 para roteamento dinâmico de funções.
+### Exemplos Avançados (JSON)
+
+Você também pode passar arrays JSON para chamadas complexas:
+```bash
+node index.js '["listData", "users"]'
+```
+
+## 📂 Arquivos de Evolução
+
+Para fins de histórico de desenvolvimento, este diretório contém:
+- `index.js`: Versão atual e estável com todos os recursos.
+- `index.v1.js` a `index.v4.js`: Versões anteriores e marcos de desenvolvimento.
 
 ---
-*Aviso: Este projeto é destinado apenas para fins de demonstração técnica e desenvolvimento local.*
+**Ambiente de Teste:** Ubuntu 24.04 | i7-12650H | 32GB RAM
