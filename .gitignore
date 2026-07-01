@@ -1,3 +1,6 @@
+compose.y*ml
+!compose.example*.yml
+
 node_modules
 .env
 
