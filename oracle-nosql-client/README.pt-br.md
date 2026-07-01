@@ -20,8 +20,3 @@ node index.js insert users '{"id": 1, "info": {"name": "Tiago"}}'
 # Consultar dados
 node index.js query "SELECT * FROM users"
 ```
-
-## 🛠 Especificações
-- **SO**: Ubuntu 24.04.3 LTS
-- **CPU**: Intel i7-12650H (12ª Geração)
-- **RAM**: ~32GB
