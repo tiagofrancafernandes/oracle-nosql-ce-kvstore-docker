@@ -1,83 +1,45 @@
-# Oracle NoSQL Manager (Node.js Demo)
+# Oracle NoSQL Manager (Node.js CLI Demo)
 
-A robust Command Line Interface (CLI) utility to manage and interact with **Oracle NoSQL Database Cloud Service** (running locally via Docker).
+Este projeto é um utilitário de interface de linha de comando (CLI) projetado para gerenciar e interagir com o **Oracle NoSQL Database Cloud Service**, rodando localmente através do Docker.
 
-## 🚀 Why this application?
+## 🚀 Por que esta aplicação?
 
-This demo was created to solve a common developer friction point: **how to quickly prototype and test NoSQL schemas without a heavy UI or complex cloud setup.**
+A aplicação foi desenvolvida para agilizar o ciclo de desenvolvimento de software em ambientes que utilizam tecnologias Oracle:
+1.  **Workflow Sem Fricção**: Conecta-se diretamente ao Proxy local (Porta 8080) sem a necessidade de chaves de segurança complexas, utilizando o driver nativo `ServiceType.KVSTORE`.
+2.  **Poder do SQL sobre JSON**: Demonstra como executar consultas SQL tradicionais em documentos JSON semiestruturados, permitindo filtrar dados internos com facilidade.
+3.  **Prototipagem Rápida**: Fornece comandos de bootstrap (setup) e manipulação de dados instantâneos para desenvolvedores que utilizam ferramentas de IA como **Claude Code** ou **Ollama**.
 
-The primary goals are:
-1.  **Bridging the Gap:** Demonstrating how to use the `oracle-nosqldb` SDK with a non-secure local Docker environment.
-2.  **HTAP Capabilities:** Showcasing how Oracle NoSQL handles both structured data (Key-Value) and unstructured data (JSON) in the same table using SQL-like syntax.
-3.  **Automation for AI Agents:** Built with a structure that allows AI Coding Agents (like Claude Code or Cline) to easily read, write, and manage database states through simple CLI commands.
+## 🛠 Especificações do Ambiente de Teste
 
-## 🛠 Tech Stack
+O desenvolvimento foi validado em um sistema de alta performance:
+*   **Sistema Operacional**: Ubuntu 24.04.3 LTS.
+*   **Processador**: 12th Gen Intel i7-12650H (10 núcleos/16 threads).
+*   **Memória**: ~32GB RAM.
+*   **Gráficos**: NVIDIA GeForce RTX 3050 (Arquitetura Ampere com 6GB VRAM).
 
-*   **Runtime:** Node.js v22+
-*   **Database:** Oracle NoSQL Community Edition (Docker)
-*   **Protocol:** Binary over HTTP (via Proxy on port 8080)
-*   **Architecture:** Singleton Manager Pattern with Dynamic Command Execution.
+## 📖 Como Usar
 
-## 📦 Prerequisites
-
-Ensure you have your local Oracle NoSQL container running:
-
+### Pré-requisitos
+Certifique-se de que o Oracle NoSQL está rodando via Docker:
 ```bash
 docker compose up -d
 ```
 
-*Note: This application is configured to connect to `http://localhost:8080` using `ServiceType.KVSTORE` to bypass local authorization requirements.*
+### Comandos CLI
+A ferramenta aceita argumentos posicionais simples ou strings JSON para automação.
 
-## 📖 Commands & Usage
+| Comando | Descrição | Exemplo |
+| :--- | :--- | :--- |
+| `setup` | Cria a tabela `users` com suporte a JSON. | `node index.js setup` |
+| `insert`| Insere um documento em uma tabela. | `node index.js insert users '{"id": 1, "info": {"name": "Tiago"}}'` |
+| `query` | Executa consultas SQL-like. | `node index.js query "SELECT * FROM users"` |
+| `help`  | Mostra a ajuda completa. | `node index.js --help` |
 
-The script supports simple string commands or JSON-formatted arguments for more complex tasks.
-
-### Basic Commands
-
-| Command | Description |
-| :--- | :--- |
-| `check` | (Default) Validates the connection and counts existing tables. |
-| `setup` | Bootstraps the environment by creating the `users` table. |
-| `seed` | Populates the database with initial fake JSON data. |
-| `listTables` | Lists all tables currently available in the store. |
-| `help` | Displays the documentation and examples. |
-
-### Advanced Usage (JSON Params)
-
-You can pass arguments to functions using JSON arrays:
-
-```bash
-# List data from a specific table
-node index.js '["listData", "users"]'
-
-# Advanced execution using object syntax
-node index.js '{"fn": "listData", "args": ["users"]}'
-```
-
-## 📂 Code Structure
-
-*   **`_docs`**: Internal metadata for self-documentation.
-*   **`init()`**: Handles the Singleton connection to the NoSQL Proxy.
-*   **`tableDDL()`**: Demonstrates how to run Data Definition Language (DDL) statements.
-*   **`query()`**: Uses the SQL for NoSQL engine to filter data inside JSON blocks.
-*   **`execute()`**: A dynamic dispatcher that parses CLI input and routes to the correct method.
-
-## 💡 Practical Examples
-
-**1. Create the environment:**
-```bash
-node index.js setup
-```
-
-**2. Insert test data:**
-```bash
-node index.js seed
-```
-
-**3. Retrieve and inspect JSON objects:**
-```bash
-node index.js listData
-```
+## 📂 Estrutura Técnica
+*   **`init()`**: Gerencia o ciclo de vida da conexão com o driver `oracle-nosqldb`.
+*   **`insert()`**: Utiliza a `Put API` para persistir dados transformando strings em objetos JS suportados.
+*   **`statement()`**: Interface para a `Query API` que permite execução de comandos DML e DDL.
+*   **`execute()`**: Despachante que interpreta o `process.argv` do Node.js v22 para roteamento dinâmico de funções.
 
 ---
-Developed for testing and integration purposes in local development environments.
+*Aviso: Este projeto é destinado apenas para fins de demonstração técnica e desenvolvimento local.*

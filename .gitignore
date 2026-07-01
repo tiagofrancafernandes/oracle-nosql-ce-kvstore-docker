@@ -1,6 +1,8 @@
 compose.y*ml
 !compose.example*.yml
 
+**/deleted
+
 node_modules
 .env
 
